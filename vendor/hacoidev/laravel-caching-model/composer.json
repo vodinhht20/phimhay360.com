@@ -1,0 +1,22 @@
+{
+    "name": "hacoidev/laravel-caching-model",
+    "description": "A simple cache library for laravel eloquent model",
+    "type": "library",
+    "require": {
+        "php": "^7.0|^8.0",
+        "laravel/framework": "^6.0|^7.0|^8.0"
+    },
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Hacoidev\\CachingModel\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "hacoidev",
+            "email": "hacoi.dev@gmail.com"
+        }
+    ],
+    "minimum-stability": "stable"
+}
