@@ -13,9 +13,7 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
-// admin/plugin/ophim-crawler/crawl
 
-Route::get('aaa', function() {
-    $a = Http::get('https://ophim1.com/phim/love-syndrome-iii');
-dd($a->json());
+Route::fallback(function () {
+    return redirect('/');
 });
