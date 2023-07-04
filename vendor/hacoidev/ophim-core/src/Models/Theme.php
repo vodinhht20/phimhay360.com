@@ -22,6 +22,7 @@ class Theme extends Model implements Cacheable
     */
 
     protected $table = 'themes';
+    protected $connection = 'mysql_clone';
     // protected $primaryKey = 'id';
     // public $timestamps = false;
     protected $guarded = ['id'];
