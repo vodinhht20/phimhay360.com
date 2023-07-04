@@ -19,7 +19,7 @@ class LogUserAccess
     {
         $ip = $request->ip();
         $time = now();
-        $message = 'Phát hiện có người vào website | IP:  {ip} | Time: {time}'
+        $message = 'Phát hiện có người vào website | IP:  {ip} | Time: {time}';
 
         Log::channel('ophim-view-web')
             ->info( $message,
