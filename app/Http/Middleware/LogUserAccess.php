@@ -19,13 +19,14 @@ class LogUserAccess
     {
         $ip = $request->ip();
         $time = now();
-        $message = 'Phát hiện có người vào website | IP:  {ip} | Time: {time}';
+        $message = 'Phát hiện có người vào website';
 
         Log::channel('ophim-view-web')
             ->info( $message,
                 [
-                    'ip' => $ip,
-                    'time' => $time->format('H:i:s d/m/Y')
+                    'Địa chỉ IP' => $ip,
+                    'THời gian' => $time->format('H:i:s d/m/Y'),
+                    'Domain' => $request->getHost(),
                 ]
             );
 
