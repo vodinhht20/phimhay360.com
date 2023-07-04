@@ -75,6 +75,22 @@ return [
             'level' => env('LOG_LEVEL', 'critical'),
         ],
 
+        'ophim-crawler' => [
+            'driver' => 'slack',
+            'url' => env('LOG_SLACK_CRAWLER_WEBHOOK_URL', null),
+            'username' => 'Laravel Log',
+            'emoji' => ':boom:',
+            'level' => 'debug'
+        ],
+
+        'ophim-view-web' => [
+            'driver' => 'slack',
+            'url' => env('LOG_SLACK_VIEW_WEB_WEBHOOK_URL', null),
+            'username' => 'Laravel Log',
+            'emoji' => ':boom:',
+            'level' => 'debug'
+        ],
+
         'papertrail' => [
             'driver' => 'monolog',
             'level' => env('LOG_LEVEL', 'debug'),
