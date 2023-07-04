@@ -21,7 +21,7 @@ class LogUserAccess
         $time = now();
         $message = 'Phát hiện có người vào website';
 
-        Log::channel('ophim-view-web')
+        Log::channel('telegram')
             ->info( $message,
                 [
                     'Địa chỉ IP' => $ip,
