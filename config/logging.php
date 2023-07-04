@@ -3,6 +3,7 @@
 use Monolog\Handler\NullHandler;
 use Monolog\Handler\StreamHandler;
 use Monolog\Handler\SyslogUdpHandler;
+use Monolog\Handler\TelegramBotHandler;
 
 return [
 
@@ -89,6 +90,16 @@ return [
             'username' => 'Laravel Log',
             'emoji' => ':boom:',
             'level' => 'debug'
+        ],
+
+        'telegram' => [
+            'driver' => 'monolog',
+            'handler' => TelegramBotHandler::class,
+            'handler_with' => [
+                'apiKey' => env('LOG_TELEGRAM_TOKEN'),
+                'channel' => env('LOG_TELEGRAM_CHANEL'),
+            ],
+            'level'  => 'debug',
         ],
 
         'papertrail' => [
