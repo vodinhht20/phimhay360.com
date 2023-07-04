@@ -7,11 +7,13 @@
 <div id="header">
     <div class="container">
         <div class="top">
-            <div class="left logo">
+            <div class="left logo" style="box-shadow: 0px 1px 3px rgba(0,0,0,0.2);">
                 <a href="/" title="{{ $title }}">
-                   <div class="left logo">
-                        <img src="{{ asset('assets/logophimhay.png') }}" alt="">
-           	        </div>
+                    @if ($logo)
+                        {!! $logo !!}
+                    @else
+                        {!! $brand !!}
+                    @endif
                 </a>
             </div>
             <div class="right-header">

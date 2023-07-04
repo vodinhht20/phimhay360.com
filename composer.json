@@ -13,7 +13,9 @@
         "laravel/framework": "^8.75",
         "laravel/sanctum": "^2.11",
         "laravel/tinker": "^2.5",
-        "ophimcms/theme-motchill": "^1.2"
+        "ophimcms/theme-legend": "^1.2",
+        "ophimcms/theme-motchill": "^1.2",
+        "ophimcms/theme-toro": "^1.0"
     },
     "require-dev": {
         "facade/ignition": "^2.5",

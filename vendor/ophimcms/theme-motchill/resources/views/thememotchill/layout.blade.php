@@ -60,7 +60,7 @@
 @endpush
 
 @section('body')
-<div id="page">
+    <div id="page">
         @if((new \Jenssegers\Agent\Agent())->isDesktop())
             @include('themes::thememotchill.inc.header')
         @else

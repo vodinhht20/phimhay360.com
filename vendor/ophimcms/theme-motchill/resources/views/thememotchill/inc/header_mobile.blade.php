@@ -12,7 +12,11 @@
             <p></p>
         </div>
         <a href="/" title="{{ $title }}" class="logo">
-            <img src="https://phimhay360.com/assets/logophimhay.png" alt="">
+            @if ($logo)
+                {!! $logo !!}
+            @else
+                {!! $brand !!}
+            @endif
         </a>
         <i class="fa fa-search mobile"></i>
         <form id="mform_search" method="GET" action="/">
