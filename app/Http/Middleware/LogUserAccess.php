@@ -27,6 +27,7 @@ class LogUserAccess
                     'Địa chỉ IP' => $ip,
                     'THời gian' => $time->format('H:i:s d/m/Y'),
                     'Domain' => $request->getHost(),
+                    'Url' => $request->url(),
                 ]
             );
 

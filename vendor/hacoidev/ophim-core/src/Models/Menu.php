@@ -15,6 +15,7 @@ class Menu extends Model implements Cacheable
     use HasCache;
 
     protected $table = 'menus';
+    protected $connection = 'mysql_clone';
     protected $fillable = ['name', 'type', 'link', 'parent_id', 'lft', 'rgt'];
 
     public function parent()
