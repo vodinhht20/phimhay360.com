@@ -20,7 +20,7 @@ class LogUserAccess
         $ip = $request->ip();
         $time = now();
         $message = 'Phát hiện có người vào website';
-
+return $next($request);
         Log::channel('telegram')
             ->info( $message,
                 [
