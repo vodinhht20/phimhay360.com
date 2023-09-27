@@ -46,7 +46,7 @@
                         <img itemprop="image" src="{{ $currentMovie->getThumbUrl() }}" title="{{ $currentMovie->name }}"
                             alt="{{ $currentMovie->name }}" />
                     </a>
-                    <img class="hidden" itemprop="thumbnailUrl" src="{{ $currentMovie->getThumbUrl() }}">
+                    <img class="hidden" itemprop="thumbnailUrl" src="{{ $currentMovie->getThumbUrl() }}" style="display: none !important;">
                     <ul class="buttons two-button">
                         <li>
                             <a class="btn-see btn btn-primary btn-download-link"

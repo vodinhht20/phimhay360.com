@@ -4,7 +4,7 @@
     use Ophim\Core\Models\Movie;
 
     $recommendations = Cache::remember('site.movies.recommendations', setting('site_cache_ttl', 5 * 60), function () {
-        return Movie::where('is_recommended', true)
+        return Movie::query()
             ->limit(get_theme_option('recommendations_limit', 10))
             ->orderBy('updated_at', 'desc')
             ->get();
