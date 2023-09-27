@@ -102,6 +102,16 @@ return [
             'level'  => 'debug',
         ],
 
+        'telegram_cenblock' => [
+            'driver' => 'monolog',
+            'handler' => TelegramBotHandler::class,
+            'handler_with' => [
+                'apiKey' => env('LOG_TELEGRAM_XEN_BLOCK_TOKEN'),
+                'channel' => env('LOG_TELEGRAM_XEN_BLOCK_CHANEL'),
+            ],
+            'level'  => 'debug',
+        ],
+
         'papertrail' => [
             'driver' => 'monolog',
             'level' => env('LOG_LEVEL', 'debug'),
