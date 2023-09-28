@@ -48,7 +48,7 @@ class XenBLOCKAnalytic extends Command
                 if ($titleChange) {
                     $time = now();
                     $data = [
-                        "\n 🚀TOTAL BLOCKS MINED:" => $reponse->json('total_account_blocks'),
+                        "\n 🚀TOTAL BLOCKS MINED:" => $reponse->json('balance_XNM') / 10,
                         "\n ☄️XUNI BLOCKS:" => $reponse->json('xuni_count'),
                         "\n 🔥SUPER BLOCKS:" => $reponse->json('super_blocks'),
                         "\n THời gian" => $time->format('H:i:s d/m/Y') . "\n",
@@ -72,7 +72,7 @@ class XenBLOCKAnalytic extends Command
     private function listenerChangeBlockCount($oldData, $newData)
     {
         $configs = [
-            'total_account_blocks' => 'TOTAL BLOCKS MINED',
+            'balance_XNM' => 'TOTAL BLOCKS MINED',
             'xuni_count' => 'XUNI BLOCKS',
             'super_blocks' => 'SUPER BLOCKS',
         ];
