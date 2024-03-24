@@ -1730,8 +1730,8 @@
             ],
             "authors": [
                 {
-                    "name": "hacoidev",
-                    "email": "hacoi.dev@gmail.com"
+                    "name": "gecko",
+                    "email": "gecko@gmail.com"
                 }
             ],
             "description": "A simple cache library for laravel eloquent model",

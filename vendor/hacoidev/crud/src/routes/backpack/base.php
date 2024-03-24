@@ -16,7 +16,6 @@ Route::group(
 [
     'namespace'  => 'Backpack\CRUD\app\Http\Controllers',
     'middleware' => config('backpack.base.web_middleware', 'web'),
-    'prefix'     => config('backpack.base.route_prefix'),
 ],
 function () {
     // if not otherwise configured, setup the auth routes
@@ -40,16 +39,18 @@ function () {
         }
     }
 
-    // if not otherwise configured, setup the dashboard routes
-    if (config('backpack.base.setup_dashboard_routes')) {
-        Route::get('dashboard', 'AdminController@dashboard')->name('backpack.dashboard');
-        Route::get('/', 'AdminController@redirect')->name('backpack');
-    }
+    Route::middleware(\Backpack\CRUD\Middleware\CheckUserAdminAccess::class)->group(function () {
+        // if not otherwise configured, setup the dashboard routes
+        if (config('backpack.base.setup_dashboard_routes')) {
+            Route::get('dashboard', 'AdminController@dashboard')->name('backpack.dashboard');
+            Route::get('/', 'AdminController@redirect')->name('backpack');
+        }
 
-    // if not otherwise configured, setup the "my account" routes
-    if (config('backpack.base.setup_my_account_routes')) {
-        Route::get('edit-account-info', 'MyAccountController@getAccountInfoForm')->name('backpack.account.info');
-        Route::post('edit-account-info', 'MyAccountController@postAccountInfoForm')->name('backpack.account.info.store');
-        Route::post('change-password', 'MyAccountController@postChangePasswordForm')->name('backpack.account.password');
-    }
+        // if not otherwise configured, setup the "my account" routes
+        if (config('backpack.base.setup_my_account_routes')) {
+            Route::get('edit-account-info', 'MyAccountController@getAccountInfoForm')->name('backpack.account.info');
+            Route::post('edit-account-info', 'MyAccountController@postAccountInfoForm')->name('backpack.account.info.store');
+            Route::post('change-password', 'MyAccountController@postChangePasswordForm')->name('backpack.account.password');
+        }
+    });
 });

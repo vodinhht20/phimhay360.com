@@ -43,14 +43,6 @@ class CrawlerScheduleCommand extends Command
      */
     public function handle()
     {
-        $time = now();
-        $message = 'Đang crawl phim hay 360';
-        Log::channel('telegram')
-            ->info( $message,
-                [
-                    'THời gian' => $time->format('H:i:s d/m/Y'),
-                ]
-            );
         if(!$this->checkCrawlerScheduleEnable()) return 0;
         $link = sprintf('%s/danh-sach/phim-moi-cap-nhat', Option::get('domain'));
         $data = collect();

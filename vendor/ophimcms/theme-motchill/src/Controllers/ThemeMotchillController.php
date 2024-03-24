@@ -2,14 +2,17 @@
 
 namespace Ophim\Thememotchill\Controllers;
 
+use App\Models\User;
 use Backpack\Settings\app\Models\Setting;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Ophim\Core\Models\Actor;
 use Ophim\Core\Models\Catalog;
 use Ophim\Core\Models\Category;
 use Ophim\Core\Models\Director;
 use Ophim\Core\Models\Episode;
 use Ophim\Core\Models\Movie;
+use Ophim\Core\Models\PaymentHistory;
 use Ophim\Core\Models\Region;
 use Ophim\Core\Models\Tag;
 
@@ -56,11 +59,11 @@ class ThememotchillController
             return view('themes::thememotchill.catalog', [
                 'data' => $data,
                 'search' => $request['search'],
-                'section_name' => "Tìm kiếm phim: $request->search"
+                'section_name' => "Tìm kiếm phim: $request->search",
             ]);
         }
         return view('themes::thememotchill.index', [
-            'title' => Setting::get('site_homepage_title')
+            'title' => Setting::get('site_homepage_title'),
         ]);
     }
 
@@ -88,12 +91,17 @@ class ThememotchillController
         return view('themes::thememotchill.single', [
             'currentMovie' => $movie,
             'title' => $movie->getTitle(),
-            'movie_related' => $movie_related
+            'movie_related' => $movie_related,
         ]);
     }
 
     public function getEpisode(Request $request)
     {
+        /** @var User $user */
+        $user = backpack_auth()->user();
+        if ($user == null) {
+            return redirect()->route('backpack.auth.login')->with('msg', 'Vui lòng đăng nhập để xem phim!');
+        }
         $movie = Movie::fromCache()->find($request->movie ?: $request->movie_id)->load('episodes');
 
         if (is_null($movie)) abort(404);
@@ -105,6 +113,35 @@ class ThememotchillController
         })->firstWhere('slug', $request->episode);
 
         if (is_null($episode)) abort(404);
+
+        if ($episode->coin > 0) {
+            if ($user->coin < $episode->coin) {
+                return redirect()->route('nap-xu.index')->with('lost_coin', 'Số xu không đủ khả dụng để xem phim, Vui lòng nạp thêm xu để xem tiếp!');
+            }
+            $isPay = PaymentHistory::query()
+                ->where('user_id', $user->id)
+                ->where('episode_id', $episode->id)
+                ->where('type', 2)
+                ->exists();
+            if ($isPay === false) {
+                try {
+                    DB::beginTransaction();
+                    PaymentHistory::query()->create([
+                        'coin' => $episode->coin,
+                        'user_id' => $user->id,
+                        'episode_id' => $episode->id,
+                        'type' => 2,
+                        'status' => 1,
+                    ]);
+                    $user->refresh();
+                    $user->coin -= $episode->coin;
+                    $user->save();
+                    DB::commit();
+                } catch (\Exception $exception) {
+                    DB::rollBack();
+                }
+            }
+        }
 
         $episode->generateSeoTags();
 
@@ -124,8 +161,37 @@ class ThememotchillController
             'currentMovie' => $movie,
             'movie_related' => $movie_related,
             'episode' => $episode,
-            'title' => $episode->getTitle()
+            'title' => $episode->getTitle(),
         ]);
+    }
+
+    public function payment()
+    {
+        /** @var User $user */
+        $user = backpack_auth()->user();
+        if ($user == null) {
+            return redirect()->route('backpack.auth.login')->with('msg', 'Vui lòng đăng nhập để sử dụng tính năng');
+        }
+        return view('themes::thememotchill.payment', compact('user'));
+    }
+
+    public function paymentHistories()
+    {
+        /** @var User $user */
+        $user = backpack_auth()->user();
+        if ($user == null) {
+            return redirect()->route('backpack.auth.login')->with('msg', 'Vui lòng đăng nhập để sử dụng tính năng');
+        }
+        $paymentHistories = PaymentHistory::query()
+            ->where('user_id', $user->id)
+            ->with('episode.movie')
+            ->orderByDesc('id')
+            ->get();
+
+        $currentCoin = $user->coin;
+        $buyCoin = $paymentHistories->where('type', 1)->sum('coin');
+        $paymentCoin = $paymentHistories->where('type', 2)->sum('coin');
+        return view('themes::thememotchill.paymentHistories', compact('paymentHistories', 'currentCoin', 'buyCoin', 'paymentCoin'));
     }
 
     public function getMovieOfCategory(Request $request)
@@ -143,7 +209,7 @@ class ThememotchillController
             'data' => $movies,
             'category' => $category,
             'title' => $category->seo_title ?: $category->getTitle(),
-            'section_name' => "Phim thể loại $category->name"
+            'section_name' => "Phim thể loại $category->name",
         ]);
     }
 
@@ -162,7 +228,7 @@ class ThememotchillController
             'data' => $movies,
             'region' => $region,
             'title' => $region->seo_title ?: $region->getTitle(),
-            'section_name' => "Phim quốc gia $region->name"
+            'section_name' => "Phim quốc gia $region->name",
         ]);
     }
 
@@ -181,7 +247,7 @@ class ThememotchillController
             'data' => $movies,
             'person' => $actor,
             'title' => $actor->getTitle(),
-            'section_name' => "Diễn viên $actor->name"
+            'section_name' => "Diễn viên $actor->name",
         ]);
     }
 
@@ -200,7 +266,7 @@ class ThememotchillController
             'data' => $movies,
             'person' => $director,
             'title' => $director->getTitle(),
-            'section_name' => "Đạo diễn $director->name"
+            'section_name' => "Đạo diễn $director->name",
         ]);
     }
 
@@ -218,7 +284,7 @@ class ThememotchillController
             'data' => $movies,
             'tag' => $tag,
             'title' => $tag->getTitle(),
-            'section_name' => "Tags: $tag->name"
+            'section_name' => "Tags: $tag->name",
         ]);
     }
 
@@ -256,7 +322,7 @@ class ThememotchillController
 
         return view('themes::thememotchill.catalog', [
             'data' => $movies,
-            'section_name' => "Danh sách $catalog->name"
+            'section_name' => "Danh sách $catalog->name",
         ]);
     }
 
@@ -270,7 +336,7 @@ class ThememotchillController
 
         $episode->update([
             'report_message' => request('message', ''),
-            'has_report' => true
+            'has_report' => true,
         ]);
 
         return response([], 204);
@@ -282,7 +348,7 @@ class ThememotchillController
         $movie = Movie::fromCache()->find($movie);
 
         $movie->refresh()->increment('rating_count', 1, [
-            'rating_star' => $movie->rating_star +  ((int) request('rating') - $movie->rating_star) / ($movie->rating_count + 1)
+            'rating_star' => $movie->rating_star +  ((int) request('rating') - $movie->rating_star) / ($movie->rating_count + 1),
         ]);
 
         return response()->json(['status' => true, 'rating_star' => number_format($movie->rating_star, 1), 'rating_count' => $movie->rating_count]);

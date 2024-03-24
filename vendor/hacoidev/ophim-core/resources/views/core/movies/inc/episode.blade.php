@@ -72,6 +72,7 @@ $episodes = collect(old('episodes', isset($entry) ? $entry->episodes : []));
                                         <th style="min-width: 100px;">Tên</th>
                                         <th style="min-width: 100px;">Slug</th>
                                         <th style="min-width: 100px;">Type</th>
+                                        <th style="min-width: 100px;">Xu</th>
                                         <th style="min-width: 300px;">Link</th>
                                         <th></th>
                                     </tr>
@@ -103,6 +104,15 @@ $episodes = collect(old('episodes', isset($entry) ? $entry->episodes : []));
                                                         {{ $name }}</option>
                                                 @endforeach
                                             </select>
+                                        </td>
+                                        <td>
+                                            <input type="number"
+                                                   name="episodes[{{ $index }}][coin]"
+                                                   placeholder=""
+                                                   class="ep_name form-control"
+                                                   value="{{ $episode['coin'] ?? ($episode->coin ?? 0) }}"
+                                                   data-attr-name="coin"
+                                            >
                                         </td>
                                         <td><input type="text" name="episodes[{{ $index }}][link]"
                                                 placeholder="" class="form-control" data-attr-name="link"
@@ -153,6 +163,7 @@ $episodes = collect(old('episodes', isset($entry) ? $entry->episodes : []));
                                     <th>Tên</th>
                                     <th>Slug</th>
                                     <th>Type</th>
+                                    <th>Xu</th>
                                     <th>Link</th>
                                     <th></th>
                                 </tr>
@@ -174,6 +185,10 @@ $episodes = collect(old('episodes', isset($entry) ? $entry->episodes : []));
                                             @endforeach
                                         </select>
                                     </td>
+                                    <td><input type="number" name="episodes[0][coin]" placeholder=""
+                                               class="ep_name form-control" value="0" data-attr-name="coin">
+                                    </td>
+
                                     <td><input type="text" name="episodes[0][link]" placeholder=""
                                             class="form-control" data-attr-name="link"></td>
                                     <td class="text-center"><span style="cursor:pointer"
@@ -284,6 +299,9 @@ $episodes = collect(old('episodes', isset($entry) ? $entry->episodes : []));
                                 <option value="{{ $key }}" ${'{{$key}}' == type ? 'selected' : ''}>{{ $name }}</option>
                             @endforeach
                         </select>
+                    </td>
+                    <td><input type="number" placeholder=""
+                            class="ep_name form-control" value="0" data-attr-name="coin">
                     </td>
                     <td><input type="text" placeholder="" value="${link || ''}"
                             class="form-control" data-attr-name="link"></td>

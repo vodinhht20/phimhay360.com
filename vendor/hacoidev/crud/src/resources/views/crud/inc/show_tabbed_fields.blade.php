@@ -1,11 +1,9 @@
 @php
     $horizontalTabs = $crud->getTabsType()=='horizontal' ? true : false;
 
-    if(isset($errors)) {
-        if ($errors->any() && array_key_exists(array_keys($errors->messages())[0], $crud->getCurrentFields()) &&
-            array_key_exists('tab', $crud->getCurrentFields()[array_keys($errors->messages())[0]])) {
-            $tabWithError = ($crud->getCurrentFields()[array_keys($errors->messages())[0]]['tab']);
-        }
+    if ($errors->any() && array_key_exists(array_keys($errors->messages())[0], $crud->getCurrentFields()) &&
+        array_key_exists('tab', $crud->getCurrentFields()[array_keys($errors->messages())[0]])) {
+        $tabWithError = ($crud->getCurrentFields()[array_keys($errors->messages())[0]]['tab']);
     }
 @endphp
 

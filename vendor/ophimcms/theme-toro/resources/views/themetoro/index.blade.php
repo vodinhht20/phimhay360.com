@@ -91,7 +91,7 @@
 @endphp
 
 @section('home_page_slider_poster')
-    @if(count($home_page_slider_poster['data'] ?? []))
+    @if(count($home_page_slider_poster['data']))
         @include('themes::themetoro.inc.home_page_slider_poster')
     @endif
 @endsection

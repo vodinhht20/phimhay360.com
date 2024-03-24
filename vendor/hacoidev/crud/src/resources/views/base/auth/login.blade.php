@@ -8,7 +8,11 @@
                 <div class="card-body">
                     <form class="col-md-12 p-t-10" role="form" method="POST" action="{{ route('backpack.auth.login') }}">
                         {!! csrf_field() !!}
-
+                        @if (session()->has('msg'))
+                            <span class="invalid-feedback" style="display: block;">
+                                <strong>{{ session()->get('msg') }}</strong>
+                            </span>
+                        @endif
                         <div class="form-group">
                             <label class="control-label" for="{{ $username }}">{{ config('backpack.base.authentication_column_name') }}</label>
 

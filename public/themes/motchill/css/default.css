@@ -107,15 +107,17 @@ html {
 }
 
 #header .actions-user ul li {
-	display: inline-block;
-	margin: 0 5px;
+    display: inline-block;
+    width: 100%;
+    margin: 0;
 }
 
 #header .actions-user a {
-	color: #fff;
+    color: #da966e;
 }
 #header .actions-user a:hover {
-	color: #ccc;
+    color: #ffffff;
+    background: #da966e;
 }
 
 #header .actions-user .fa {
@@ -123,6 +125,29 @@ html {
 	margin-right: 4px;
 }
 
+.payment_item_box {
+    background: #EFF6F7;
+    padding: 10px;
+    border-radius: 10px;
+    color: black;
+    display: flex;
+    margin-top: 50px;
+}
+.content_payment {
+    width: 250px;
+    height: 78px;
+    color: orange;
+    border: 2px dashed;
+    border-radius: 8px;
+    font-size: 30px;
+    background-color: #fff;
+    text-align: center;
+    margin: auto;
+    display: flex;
+    align-content: center;
+    align-items: center;
+    justify-content: center;
+}
 .main-menu {
 	background: #282828;
 	padding: 0;
@@ -609,7 +634,7 @@ html {
 }
 
 .list-film li:nth-child(even){
-	background: rgba(20,20,20,0.5); 
+	background: rgba(20,20,20,0.5);
 }
 
 .list-films .item a {
@@ -694,7 +719,7 @@ html {
 }
 
 .list-film .film-item-ver img.avatar {
-    object-fit: cover;	
+    object-fit: cover;
 	width: 75px;
 	height: 87px;
 	float: left;

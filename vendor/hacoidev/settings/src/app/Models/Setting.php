@@ -15,8 +15,6 @@ class Setting extends Model implements Cacheable
 
     protected $guarded = [];
 
-    protected $connection = 'mysql_clone';
-
     public function __construct(array $attributes = [])
     {
         parent::__construct($attributes);

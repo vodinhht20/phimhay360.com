@@ -9,7 +9,11 @@
         <div class="container">
             <div class="header-logo">
                 <a class="logo" href="/" title="{{ $title }}">
-                    <img src="{{ asset('assets/logophimhay.png') }}" alt="">
+                    @if ($logo)
+                        {!! $logo !!}
+                    @else
+                        {!! $brand !!}
+                    @endif
                 </a>
             </div>
             <div id="header-search-form" class="widget_search">

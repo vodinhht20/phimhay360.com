@@ -1,6 +1,6 @@
 <div class="list-films film-hot">
     <h2 class="title-box">
-        <a class="tophot">Phim Mới Cập Nhật</a>
+        <a class="tophot">Phim hot</a>
     </h2>
     <ul id="film_hot" class="relative">
         @if (count($recommendations))

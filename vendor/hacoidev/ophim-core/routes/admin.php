@@ -13,7 +13,9 @@ Route::group([
     'prefix'     => config('backpack.base.route_prefix', 'admin'),
     'middleware' => array_merge(
         (array) config('backpack.base.web_middleware', 'web'),
-        (array) config('backpack.base.middleware_key', 'admin')
+        (array) config('backpack.base.middleware_key', 'admin'),
+        (array) \Backpack\CRUD\Middleware\CheckUserAdminAccess::class
+
     ),
     'namespace'  => 'Ophim\Core\Controllers\Admin',
 ], function () {
@@ -35,6 +37,8 @@ Route::group([
     Route::crud('theme', 'ThemeManagementController');
     Route::crud('sitemap', 'SiteMapController');
     Route::get('quick-action/delete-cache', 'QuickActionController@delete_cache');
+    Route::get('coin/{id}', [\Ophim\Core\Controllers\Admin\CoinController::class, 'index'])->name('admin-coin.index');
+    Route::post('coin/{id}/add', [\Ophim\Core\Controllers\Admin\CoinController::class, 'update'])->name('admin-coin.add');
 });
 
 Route::group([

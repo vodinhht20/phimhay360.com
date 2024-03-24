@@ -10,9 +10,7 @@ use Ophim\ThemeMotchill\Controllers\ThemeMotchillController;
 // Routes you generate using Backpack\Generators will be placed here.
 
 Route::group([
-    'middleware' => array_merge(
-        (array) config('backpack.base.web_middleware', 'web'),
-    ),
+    'middleware' => (array) config('backpack.base.web_middleware', 'web'),
 ], function () {
     Route::get('/', [ThemeMotchillController::class, 'index']);
 
@@ -43,6 +41,12 @@ Route::group([
     Route::get(setting('site_routes_episode', '/phim/{movie}/{episode}-{id}'), [ThemeMotchillController::class, 'getEpisode'])
         ->where(['movie' => '.+', 'movie_id' => '[0-9]+', 'episode' => '.+', 'id' => '[0-9]+'])
         ->name('episodes.show');
+
+    Route::get('nap-xu', [ThemeMotchillController::class, 'payment'])
+        ->name('nap-xu.index');
+
+    Route::get('lich-su-nap-xu', [ThemeMotchillController::class, 'paymentHistories'])
+        ->name('lich-su-nap-xu.index');
 
     Route::post(sprintf('/%s/{movie}/{episode}/report', config('ophim.routes.movie', 'phim')), [ThemeMotchillController::class, 'reportEpisode'])->name('episodes.report');
     Route::post(sprintf('/%s/{movie}/rate', config('ophim.routes.movie', 'phim')), [ThemeMotchillController::class, 'rateMovie'])->name('movie.rating');

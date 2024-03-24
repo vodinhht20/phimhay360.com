@@ -2,6 +2,7 @@
 
 namespace Backpack\CRUD\app\Library\Auth;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
@@ -112,6 +113,12 @@ trait AuthenticatesUsers
 
         if ($response = $this->authenticated($request, $this->guard()->user())) {
             return $response;
+        }
+
+        /** @var User $user */
+        $user = $this->guard()->user();
+        if (!$user->hasRole('Admin')) {
+            return redirect('/');
         }
 
         return $request->wantsJson()

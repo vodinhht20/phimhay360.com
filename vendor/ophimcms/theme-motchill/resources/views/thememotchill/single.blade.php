@@ -23,8 +23,9 @@
 
 @php
     $watchUrl = '#';
+    $currentEpisode = null;
     if (!$currentMovie->is_copyright && count($currentMovie->episodes) && $currentMovie->episodes[0]['link'] != '') {
-        $watchUrl = $currentMovie->episodes
+        $currentEpisode = $currentMovie->episodes
             ->sortBy([['server', 'asc']])
             ->groupBy('server')
             ->first()
@@ -32,8 +33,9 @@
             ->groupBy('name')
             ->last()
             ->sortByDesc('type')
-            ->first()
-            ->getUrl();
+            ->first();
+
+        $watchUrl =$currentEpisode->getUrl();
     }
 @endphp
 
@@ -46,7 +48,7 @@
                         <img itemprop="image" src="{{ $currentMovie->getThumbUrl() }}" title="{{ $currentMovie->name }}"
                             alt="{{ $currentMovie->name }}" />
                     </a>
-                    <img class="hidden" itemprop="thumbnailUrl" src="{{ $currentMovie->getThumbUrl() }}" style="display: none !important;">
+                    <img class="hidden" itemprop="thumbnailUrl" src="{{ $currentMovie->getThumbUrl() }}">
                     <ul class="buttons two-button">
                         <li>
                             <a class="btn-see btn btn-primary btn-download-link"
@@ -55,7 +57,7 @@
                         </li>
                         <li>
                             <a class="btn-see btn btn-danger btn-stream-link" href="{{ $watchUrl }}"
-                                title="Xem phim {{ $currentMovie->name }}"> Xem phim
+                                title="Xem phim {{ $currentMovie->name }}"> Xem phim ({{ $currentEpisode?->coin ? $currentEpisode?->coin . ' Xu' : 'Free' }})
                             </a>
                         </li>
                     </ul>
