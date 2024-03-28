@@ -50,14 +50,22 @@
                     </a>
                     <img class="hidden" itemprop="thumbnailUrl" src="{{ $currentMovie->getThumbUrl() }}">
                     <ul class="buttons two-button">
+{{--                        <li>--}}
+{{--                            <a class="btn-see btn btn-primary btn-download-link"--}}
+{{--                                onclick="alert('Chức năng download đang được xây dựng và sẽ sớm ra mắt ^^');return false;">--}}
+{{--                                Tải phim </a>--}}
+{{--                        </li>--}}
                         <li>
-                            <a class="btn-see btn btn-primary btn-download-link"
-                                onclick="alert('Chức năng download đang được xây dựng và sẽ sớm ra mắt ^^');return false;">
-                                Tải phim </a>
-                        </li>
-                        <li>
-                            <a class="btn-see btn btn-danger btn-stream-link" href="{{ $watchUrl }}"
-                                title="Xem phim {{ $currentMovie->name }}"> Xem phim ({{ $currentEpisode?->coin ? $currentEpisode?->coin . ' Xu' : 'Free' }})
+                            <a class="btn-see btn btn-stream-link" href="{{ $watchUrl }}"
+                                title="Xem phim {{ $currentMovie->name }}" style="position: relative;">
+                                <img src="\assets\button_movie.png">
+                                <span style="top: 50px;left: 50%;position: absolute;display: flex;grid-column-gap: 7px;align-content: center;align-items: center;">
+                                    <span style="
+                                        color: orange;
+                                        font-weight: bold;"
+                                    >{{ $currentEpisode?->coin > 0 ? "-{$currentEpisode?->coin}" : 0 }}</span>
+                                    <img src="\assets/dongxu.png" style="width: 20px;">
+                                </span>
                             </a>
                         </li>
                     </ul>

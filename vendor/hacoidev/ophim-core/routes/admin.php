@@ -39,6 +39,7 @@ Route::group([
     Route::get('quick-action/delete-cache', 'QuickActionController@delete_cache');
     Route::get('coin/{id}', [\Ophim\Core\Controllers\Admin\CoinController::class, 'index'])->name('admin-coin.index');
     Route::post('coin/{id}/add', [\Ophim\Core\Controllers\Admin\CoinController::class, 'update'])->name('admin-coin.add');
+    Route::post('cash/{id}/incress', [\Ophim\Core\Controllers\Admin\CoinController::class, 'incress'])->name('admin-cash.incress');
 });
 
 Route::group([

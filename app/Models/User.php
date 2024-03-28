@@ -20,6 +20,8 @@ class User extends OphimUser
      * @var array<int, string>
      */
     protected $fillable = [
+        'reference_code',
+        'reference_user_id',
         'name',
         'email',
         'password',

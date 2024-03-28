@@ -86,6 +86,9 @@
                     <li class="menu-item {{$item['link'] === '/' ? 'active' : ''}}"><a title="{{ $item['name'] }}" href="{{ $item['link'] }}">{{ $item['name'] }}</a></li>
                 @endif
             @endforeach
+            @if(true)
+                <li class="menu-item"><a title="Kiếm tiến" href="/kiem-tien">Kiếm tiền</a></li>
+            @endif
         </ul>
     </div>
 </div>

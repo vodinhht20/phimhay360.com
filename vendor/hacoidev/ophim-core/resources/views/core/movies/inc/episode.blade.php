@@ -74,6 +74,7 @@ $episodes = collect(old('episodes', isset($entry) ? $entry->episodes : []));
                                         <th style="min-width: 100px;">Type</th>
                                         <th style="min-width: 100px;">Xu</th>
                                         <th style="min-width: 300px;">Link</th>
+                                        <th style="min-width: 300px;">Mô tả</th>
                                         <th></th>
                                     </tr>
                                 </thead>
@@ -118,13 +119,19 @@ $episodes = collect(old('episodes', isset($entry) ? $entry->episodes : []));
                                                 placeholder="" class="form-control" data-attr-name="link"
                                                 value="{{ $episode['link'] ?? ($episode->link ?? '') }}">
                                         </td>
+                                        <td>
+                                            <textarea rows="3" cols="3" name="episodes[{{ $index }}][desciption]"
+                                                   placeholder="" class="form-control" data-attr-name="desciption">
+                                                {{ $episode['desciption'] ?? ($episode->desciption ?? '') }}
+                                            </textarea>
+                                        </td>
                                         <td class="text-center"><span style="cursor:pointer"
                                                 class="badge outline-badge-danger delete-episode">Xóa</span></td>
                                     </tr>
                                     @php $index++; @endphp
                                     @endforeach
                                     <tr>
-                                        <td colspan="5"></td>
+                                        <td colspan="7"></td>
                                     </tr>
                                     @endforeach
                                 </tbody>
@@ -165,6 +172,7 @@ $episodes = collect(old('episodes', isset($entry) ? $entry->episodes : []));
                                     <th>Type</th>
                                     <th>Xu</th>
                                     <th>Link</th>
+                                    <th>Mô tả</th>
                                     <th></th>
                                 </tr>
                             </thead>
@@ -191,6 +199,11 @@ $episodes = collect(old('episodes', isset($entry) ? $entry->episodes : []));
 
                                     <td><input type="text" name="episodes[0][link]" placeholder=""
                                             class="form-control" data-attr-name="link"></td>
+                                    <td>
+                                        <textarea rows="3" cols="3" name="episodes[0][desciption]"
+                                                  placeholder="" class="form-control" data-attr-name="desciption">
+                                        </textarea>
+                                    </td>
                                     <td class="text-center"><span style="cursor:pointer"
                                             class="badge outline-badge-danger delete-episode">Xóa</span></td>
                                 </tr>
@@ -305,9 +318,14 @@ $episodes = collect(old('episodes', isset($entry) ? $entry->episodes : []));
                     </td>
                     <td><input type="text" placeholder="" value="${link || ''}"
                             class="form-control" data-attr-name="link"></td>
-                    <td class="text-center"><span style="cursor:pointer"
-                            class="badge outline-badge-danger delete-episode">Xóa</span></td>
-                </tr>`
+                            <td>
+                                <textarea rows="3" cols="3"
+                                       placeholder="" class="form-control" data-attr-name="desciption">
+                                </textarea>
+                            </td>
+<td class="text-center"><span style="cursor:pointer"
+class="badge outline-badge-danger delete-episode">Xóa</span></td>
+</tr>`
     }
 
     $(document).on('click', '.add-episode-btn', function(e) {

@@ -28,6 +28,9 @@
 @endsection
 
 @section('content')
+    @php
+        $linkAutoNext = '';
+    @endphp
     <div class="left-content-player" id="player-video">
         <div class="box-player" id="box-player">
             <div class="film-note tip-change-server" style="margin:0; float:right;border: 1px dashed #e25ddb;padding: 5px">
@@ -45,7 +48,78 @@
                 <div class="loading-player"></div>
             </div>
         </div>
-        <div class="div-control" style="margin-bottom:80px">
+        <style>
+            /* The switch - the box around the slider */
+            .switch {
+                position: relative;
+                display: inline-block;
+                width: 50px;
+                height: 23px;
+                margin-bottom: 0;
+            }
+
+            /* Hide default HTML checkbox */
+            .switch input {
+                opacity: 0;
+                width: 0;
+                height: 0;
+            }
+
+            /* The slider */
+            .slider {
+                position: absolute;
+                cursor: pointer;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background-color: #2E2E2E;
+                -webkit-transition: .4s;
+                transition: .4s;
+            }
+
+            .slider:before {
+                position: absolute;
+                content: "";
+                height: 15px;
+                width: 15px;
+                left: 4px;
+                bottom: 4px;
+                background-color: white;
+                -webkit-transition: .4s;
+                transition: .4s;
+            }
+
+            input:checked + .slider {
+                background-color: #2196F3;
+            }
+
+            input:focus + .slider {
+                box-shadow: 0 0 1px #2196F3;
+            }
+
+            input:checked + .slider:before {
+                -webkit-transform: translateX(26px);
+                -ms-transform: translateX(26px);
+                transform: translateX(26px);
+            }
+
+            .slider.round {
+                border-radius: 14px;
+            }
+
+            .slider.round:before {
+                border-radius: 50%;
+            }
+        </style>
+        <div class="div-control" style="margin-bottom: 80px;margin-top: 10px; display: flex; grid-column-gap: 20p; justify-content: space-between">
+            <div>
+                Chế độ tự động phát:
+                <label class="switch">
+                    <input type="checkbox">
+                    <span class="slider round"></span>
+                </label>
+            </div>
             <span class="video-btn" id="btn_lightbulb" title="Tắt đèn">
                 <i class="fa fa-lightbulb-o"></i>
             </span>
@@ -59,8 +133,20 @@
                 </div>
                 <div class="episodes">
                     <div class="list-episode">
+                        @php
+                            $isActive = false;
+                        @endphp
                         @foreach ($data->sortByDesc('name', SORT_NATURAL)->groupBy('name') as $name => $item)
-                            <a href="{{ $item->sortByDesc('type')->first()->getUrl() }}"
+                            @php
+                                if($item->contains($episode)) {
+                                    $isActive = true;
+                                }
+                                if (isset($linkPhim) && $isActive && $linkAutoNext === ''){
+                                    $linkAutoNext = $linkPhim;
+                                }
+                                $linkPhim = $item->sortByDesc('type')->first()->getUrl();
+                            @endphp
+                            <a href="{{ $linkPhim }}"
                                 class="@if ($item->contains($episode)) current @endif" title="{{ $name }}">Tập
                                 {{ $name }}</a>
                         @endforeach
@@ -88,10 +174,8 @@
             <div class="clear"></div>
             <p class="short-description"
                 style="padding: 5px 8px;margin: 5px 0 20px 0;line-height: 26px;font-size: 12px;color: #BBB;background: #222;">
-                {!! mb_substr(strip_tags($currentMovie->content), 0, 300, 'utf-8') !!}...
-                [ <a style="color: #fff;" href="{{ $currentMovie->getUrl() }}"
-                    title="{{ $currentMovie->name }} - {{ $currentMovie->origin_name }} ({{ $currentMovie->publish_year }})">Xem
-                    thêm</a>] </p>
+                {!! strip_tags($episode->desciption ?: $currentMovie->content) !!}
+            </p>
             <div class="clear"></div>
             <div class="social-icon">
                 <div class="fb-like" data-href="{{ $currentMovie->getUrl() }}" data-layout="button_count"
@@ -137,6 +221,12 @@
                 </h2>
                 <ul id="film_related" class="relative">
                     @foreach ($movie_related as $movie)
+                        @php
+                            if ($linkAutoNext === '') {
+                                $movieepisode = $movie->episodes()->first();
+                                $linkAutoNext = $movieepisode ? $movieepisode->getUrl() : '';
+                            }
+                        @endphp
                         <li class="item" title="{{ $movie->name }}">
                             <span class="label">{{ $movie->episode_current }} {{ $movie->language }}</span>
                             <a href="{{ $movie->getUrl() }}" title="{{ $movie->name }}">
@@ -171,6 +261,20 @@
         var episode_id = {{ $episode->id }};
         const wrapper = document.getElementById('player');
         const vastAds = "{{ Setting::get('jwplayer_advertising_file') }}";
+        var autoNextOke = localStorage.getItem('auto_next') == 2;
+        localStorage.setItem('reject_url', '{{ $linkAutoNext }}');
+        if (autoNextOke) {
+            $('.switch input').attr('checked', true);
+        }
+        $('.switch input').on('click', function () {
+            if ($(this).attr('checked')) {
+                $(this).attr('checked', false);
+                localStorage.setItem('auto_next', 0);
+            } else {
+                $(this).attr('checked', true);
+                localStorage.setItem('auto_next', 2);
+            }
+        })
 
         function chooseStreamingServer(el) {
             const type = el.dataset.type;
@@ -222,6 +326,12 @@
                     };
                     fake_player.setup(objSetupFake);
                     fake_player.on('complete', function(event) {
+                        let reject_url = localStorage.getItem('reject_url');
+                        let auto_next = localStorage.getItem('auto_next') == 2;
+                        if (auto_next && reject_url && reject_url.trim() !== '') {
+                            window.location.href = reject_url;
+                        }
+
                         $("#fake_jwplayer").remove();
                         wrapper.innerHTML = `<iframe width="100%" height="350px" src="${link}" frameborder="0" scrolling="no"
                     allowfullscreen="" allow='autoplay'></iframe>`
@@ -366,6 +476,11 @@
                 });
 
                 player.on('complete', function() {
+                    let reject_url = localStorage.getItem('reject_url');
+                    let auto_next = localStorage.getItem('auto_next') == 2;
+                    if (auto_next && reject_url && reject_url.trim() !== '') {
+                        window.location.href = reject_url;
+                    }
                     if (typeof(Storage) !== 'undefined') {
                         localStorage.removeItem(resumeData);
                     } else {

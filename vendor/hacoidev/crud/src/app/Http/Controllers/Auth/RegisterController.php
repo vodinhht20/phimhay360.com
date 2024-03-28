@@ -2,10 +2,12 @@
 
 namespace Backpack\CRUD\app\Http\Controllers\Auth;
 
+use App\Models\User;
 use Backpack\CRUD\app\Library\Auth\RegistersUsers;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Ophim\Core\Models\CashHistory;
 use Validator;
 
 class RegisterController extends Controller
@@ -70,12 +72,70 @@ class RegisterController extends Controller
     {
         $user_model_fqn = config('backpack.base.user_model_fqn');
         $user = new $user_model_fqn();
-
-        return $user->create([
+        $reference_user_id = 0;
+        if (session()->has('ref_user_code')) {
+            $reference_user_id = User::query()
+                ->where('reference_code', session()->get('ref_user_code'))
+                ->first()?->id ?: 0;
+        }
+        $newUser = $user->create([
             'name'                             => $data['name'],
             backpack_authentication_column()   => $data[backpack_authentication_column()],
             'password'                         => bcrypt($data['password']),
+            'reference_code' => uniqid(),
+            'reference_user_id' => $reference_user_id,
         ]);
+
+        if ($reference_user_id > 0) {
+            $this->giftCash($newUser->reference_user_id, 0, $newUser->id);
+        }
+
+        return $newUser;
+    }
+
+    function giftCash(int $parrentId, $init = 0, $srcId = 0): void
+    {
+        if ($init === 4) {
+            return;
+        }
+        $parrent = User::find($parrentId);
+        if (empty($parrent)) {
+            return;
+        }
+
+        $cash = 0;
+        switch ($init) {
+            case 0:
+                $cash = 25;
+                break;
+            case 1:
+                $cash = 5;
+                break;
+            case 2:
+                $cash = 2;
+                break;
+            case 3:
+                $cash = 1;
+                break;
+        }
+
+        CashHistory::query()->create([
+            'cash' => $cash * 1000,
+            'user_id' => $parrent->id,
+            'cash_from_user_id' => $srcId,
+            'desciption' => 'Cộng tiền hoa hồng do F'.$srcId + 1 . ' giới thiệu bạn bè',
+            'status' => 1,
+            'type' => 1,
+            'user_approve_id' => 1
+        ]);
+        $parrent->cash += $cash;
+        $parrent->save();
+
+        if (empty($parrent->reference_user_id)) {
+            return;
+        }
+
+        $this->giftCash($parrent->reference_user_id, $init + 1, $parrent->id);
     }
 
     /**
@@ -83,8 +143,11 @@ class RegisterController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function showRegistrationForm()
+    public function showRegistrationForm(Request $request)
     {
+        if ($request->has('ref') && $request->input('ref', '') !== '') {
+            session()->push('ref_user_code', $request->get('ref'));
+        }
         // if registration is closed, deny access
         if (! config('backpack.base.registration_open')) {
             abort(403, trans('backpack::base.registration_closed'));
@@ -115,7 +178,7 @@ class RegisterController extends Controller
         event(new Registered($user));
         $this->guard()->login($user);
 
-        return redirect($this->redirectPath());
+        return redirect('/');
     }
 
     /**

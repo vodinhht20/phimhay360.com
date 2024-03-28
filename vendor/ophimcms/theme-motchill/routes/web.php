@@ -48,6 +48,9 @@ Route::group([
     Route::get('lich-su-nap-xu', [ThemeMotchillController::class, 'paymentHistories'])
         ->name('lich-su-nap-xu.index');
 
+    Route::get('kiem-tien', [ThemeMotchillController::class, 'reference'])
+        ->name('reference.index');
+
     Route::post(sprintf('/%s/{movie}/{episode}/report', config('ophim.routes.movie', 'phim')), [ThemeMotchillController::class, 'reportEpisode'])->name('episodes.report');
     Route::post(sprintf('/%s/{movie}/rate', config('ophim.routes.movie', 'phim')), [ThemeMotchillController::class, 'rateMovie'])->name('movie.rating');
 

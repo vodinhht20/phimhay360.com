@@ -2,7 +2,9 @@
 	@if (!$crud->model->translationEnabled())
 
 	<!-- Single edit button -->
-	<a href="{{ route('admin-coin.index', ['id' => $entry->getKey()]) }}" class="btn btn-sm btn-link"><i class="la la-edit"></i> Chỉnh sửa Xu</a>
+    @if(preg_match('/admin\/user/i', \Illuminate\Support\Facades\Route::current()->uri))
+        <a href="{{ route('admin-coin.index', ['id' => $entry->getKey()]) }}" class="btn btn-sm btn-link"><i class="la la-edit"></i> Chỉnh sửa Xu</a>
+    @endif
 	<a href="{{ url($crud->route.'/'.$entry->getKey().'/edit') }}" class="btn btn-sm btn-link"><i class="la la-edit"></i> {{ trans('backpack::crud.edit') }}</a>
 
 	@else

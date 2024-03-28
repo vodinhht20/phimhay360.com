@@ -2073,13 +2073,14 @@ html {
 	color: #ffffff;
 	background-color: #2E2E2E;
 	border-radius: 2px;
-	float: right;
 	cursor: pointer;
 	position: relative;
 	z-index: 9;
 	font-weight: bold;
 }
-
+.video-btn {
+    margin-top: 0;
+}
 .video-btn i {
 	padding-right: 5px;
 }

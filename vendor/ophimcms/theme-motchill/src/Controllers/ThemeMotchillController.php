@@ -7,6 +7,7 @@ use Backpack\Settings\app\Models\Setting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Ophim\Core\Models\Actor;
+use Ophim\Core\Models\CashHistory;
 use Ophim\Core\Models\Catalog;
 use Ophim\Core\Models\Category;
 use Ophim\Core\Models\Director;
@@ -192,6 +193,25 @@ class ThememotchillController
         $buyCoin = $paymentHistories->where('type', 1)->sum('coin');
         $paymentCoin = $paymentHistories->where('type', 2)->sum('coin');
         return view('themes::thememotchill.paymentHistories', compact('paymentHistories', 'currentCoin', 'buyCoin', 'paymentCoin'));
+    }
+
+    public function reference()
+    {
+        /** @var User $user */
+        $user = backpack_auth()->user();
+        if ($user == null) {
+            return redirect()->route('backpack.auth.login')->with('msg', 'Vui lòng đăng nhập để sử dụng tính năng');
+        }
+        $cashHistories = CashHistory::query()
+            ->where('user_id', $user->id)
+            ->orderByDesc('id')
+            ->get();
+        $setting = Setting::query()->where('group', 'kiem-tien')->get();
+        $desciption = $setting->where('name', 'Desciption')->first()?->value ?: '';
+        $imageUrl = $setting->where('name', 'link_image')->first()?->value ?: '';
+        $refUsers = User::where('reference_user_id', $user->id)->get();
+
+        return view('themes::thememotchill.reference', compact('cashHistories', 'user', 'desciption', 'imageUrl'));
     }
 
     public function getMovieOfCategory(Request $request)
